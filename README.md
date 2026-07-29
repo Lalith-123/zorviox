@@ -35,6 +35,5 @@ zorviox/
 │   ├── app/          # Next.js App Router pages & layouts
 │   ├── components/   # UI components (shadcn/ui)
 │   └── lib/          # Utility functions
-├── public/           # Static assets
 └── ...
 ```
