@@ -30,9 +30,15 @@ export function Header() {
             )}
             <Link
               href="/tools/meta-tag-checker"
-              className="rounded-md bg-foreground px-3.5 py-1.5 text-[13px] font-medium text-background transition-all hover:opacity-80 active:scale-[0.97]"
+              className="hidden rounded-md px-3 py-1.5 text-[13px] font-medium text-muted-foreground transition-colors hover:text-foreground sm:block"
             >
               Meta Tag Checker
+            </Link>
+            <Link
+              href="/tools/sitemap-analyzer"
+              className="rounded-md bg-foreground px-3.5 py-1.5 text-[13px] font-medium text-background transition-all hover:opacity-80 active:scale-[0.97]"
+            >
+              Sitemap Analyzer
             </Link>
           </nav>
         </div>
