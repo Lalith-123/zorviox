@@ -46,6 +46,13 @@ export function Header() {
                     <span className="font-medium text-foreground">Sitemap Analyzer</span>
                     <span className="text-[11px] text-muted-foreground">Audit XML sitemaps</span>
                   </Link>
+                  <Link
+                    href="/tools/redirect-checker"
+                    className="flex flex-col px-4 py-2.5 text-[13px] transition-colors hover:bg-muted/50"
+                  >
+                    <span className="font-medium text-foreground">Redirect Checker</span>
+                    <span className="text-[11px] text-muted-foreground">Trace redirect paths</span>
+                  </Link>
                 </div>
               </div>
             </div>

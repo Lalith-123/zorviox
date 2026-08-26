@@ -4,7 +4,7 @@ export const SITE = {
   url: "https://zorviox.com",
   title: "Zorviox — Simple Tools for the Modern Web",
   description:
-    "Fast, practical online tools for developers, website owners, and businesses. Start with our free Meta Tag Checker and Sitemap Analyzer.",
+    "Fast, practical online tools for developers, website owners, and businesses. Start with our free Meta Tag Checker, Sitemap Analyzer, and Redirect Checker.",
 } as const;
 
 export interface Tool {
@@ -27,6 +27,13 @@ export const TOOLS: Tool[] = [
     name: "Sitemap Analyzer",
     description:
       "Analyze XML sitemaps for SEO issues, structural problems, and broken URLs.",
+    category: "SEO & Website",
+  },
+  {
+    slug: "redirect-checker",
+    name: "Redirect Checker",
+    description:
+      "Trace HTTP redirect paths, detect chains, loops, and cross-domain changes.",
     category: "SEO & Website",
   },
 ];
