@@ -132,9 +132,9 @@ export default function MetaTagCheckerPage() {
       />
 
       <Container>
-        <article className="py-10 sm:py-14">
+        <article className="py-6 sm:py-8">
           {/* Breadcrumbs */}
-          <nav aria-label="Breadcrumb" className="mb-8 text-[13px] text-muted-foreground">
+          <nav aria-label="Breadcrumb" className="mb-4 text-[13px] text-muted-foreground">
             <ol className="flex items-center gap-1.5">
               <li>
                 <Link href="/" className="transition-colors hover:text-foreground">
@@ -155,8 +155,8 @@ export default function MetaTagCheckerPage() {
           </nav>
 
           {/* Header */}
-          <div className="mb-10">
-            <h1 className="mb-3 text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
+          <div className="mb-6">
+            <h1 className="mb-2 text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
               Meta Tag Checker
             </h1>
             <p className="max-w-xl text-[15px] leading-relaxed text-muted-foreground">

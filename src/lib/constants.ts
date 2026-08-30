@@ -4,7 +4,7 @@ export const SITE = {
   url: "https://zorviox.com",
   title: "Zorviox — Simple Tools for the Modern Web",
   description:
-    "Fast, practical online tools for developers, website owners, and businesses. Start with our free Meta Tag Checker, Sitemap Analyzer, and Redirect Checker.",
+    "Fast, practical online tools for developers, website owners, and businesses. Start with our free Meta Tag Checker, Sitemap Analyzer, Redirect Checker, and JSON Repair Tool.",
 } as const;
 
 export interface Tool {
@@ -35,5 +35,12 @@ export const TOOLS: Tool[] = [
     description:
       "Trace HTTP redirect paths, detect chains, loops, and cross-domain changes.",
     category: "SEO & Website",
+  },
+  {
+    slug: "json-repair",
+    name: "JSON Repair Tool",
+    description:
+      "Fix malformed JSON, validate syntax, and repair trailing commas and missing quotes.",
+    category: "Developer Tools",
   },
 ];
