@@ -60,6 +60,13 @@ export function Header() {
                     <span className="font-medium text-foreground">JSON Repair</span>
                     <span className="text-[11px] text-muted-foreground">Fix malformed JSON</span>
                   </Link>
+                  <Link
+                    href="/tools/json-schema-generator"
+                    className="flex flex-col px-4 py-2.5 text-[13px] transition-colors hover:bg-muted/50"
+                  >
+                    <span className="font-medium text-foreground">JSON Schema Generator</span>
+                    <span className="text-[11px] text-muted-foreground">Generate JSON Schema</span>
+                  </Link>
                 </div>
               </div>
             </div>

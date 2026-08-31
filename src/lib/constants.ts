@@ -4,7 +4,7 @@ export const SITE = {
   url: "https://zorviox.com",
   title: "Zorviox — Simple Tools for the Modern Web",
   description:
-    "Fast, practical online tools for developers, website owners, and businesses. Start with our free Meta Tag Checker, Sitemap Analyzer, Redirect Checker, and JSON Repair Tool.",
+    "Fast, practical online tools for developers, website owners, and businesses. Start with our free Meta Tag Checker, Sitemap Analyzer, Redirect Checker, JSON Repair Tool, and JSON Schema Generator.",
 } as const;
 
 export interface Tool {
@@ -41,6 +41,13 @@ export const TOOLS: Tool[] = [
     name: "JSON Repair Tool",
     description:
       "Fix malformed JSON, validate syntax, and repair trailing commas and missing quotes.",
+    category: "Developer Tools",
+  },
+  {
+    slug: "json-schema-generator",
+    name: "JSON Schema Generator",
+    description:
+      "Generate valid JSON Schema from JSON data. Supports Draft 2020-12, Draft-07, multiple samples, and type inference.",
     category: "Developer Tools",
   },
 ];
