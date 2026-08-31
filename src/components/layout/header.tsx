@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { Container } from "@/components/layout/container";
+import { ThemeToggle } from "@/components/layout/theme-toggle";
 
 export function Header() {
   return (
@@ -15,7 +16,7 @@ export function Header() {
             Zorviox
           </Link>
 
-          <nav className="flex items-center">
+          <nav className="flex items-center gap-2">
             <div className="group relative">
               <button className="inline-flex items-center gap-1.5 rounded-md px-3 py-1.5 text-[13px] font-medium text-muted-foreground transition-colors hover:text-foreground">
                 Tools
@@ -70,6 +71,7 @@ export function Header() {
                 </div>
               </div>
             </div>
+            <ThemeToggle />
           </nav>
         </div>
       </Container>
