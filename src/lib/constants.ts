@@ -3,8 +3,8 @@ export const SITE = {
   domain: "zorviox.com",
   url: "https://zorviox.com",
   title: "Zorviox — Simple Tools for the Modern Web",
-  description:
-    "Fast, practical online tools for developers, website owners, and businesses. Start with our free Meta Tag Checker, Sitemap Analyzer, Redirect Checker, JSON Repair Tool, JSON Schema Generator, DNS Lookup Tool, and SSL Certificate Checker.",
+    description:
+      "Fast, practical online tools for developers, website owners, and businesses. Start with our free Meta Tag Checker, Sitemap Analyzer, Redirect Checker, JSON Repair Tool, JSON Schema Generator, DNS Lookup Tool, SSL Certificate Checker, and Broken Link Checker.",
 } as const;
 
 export interface Tool {
@@ -63,5 +63,12 @@ export const TOOLS: Tool[] = [
     description:
       "Inspect TLS certificates, expiration, issuer, hostname coverage, certificate chain, cipher suite, and security configuration.",
     category: "Networking",
+  },
+  {
+    slug: "broken-link-scanner",
+    name: "Broken Link Checker",
+    description:
+      "Crawl your website to find broken links, 404 errors, redirect chains, server errors, and soft 404s.",
+    category: "SEO & Website",
   },
 ];
