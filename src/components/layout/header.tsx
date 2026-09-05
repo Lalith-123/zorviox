@@ -75,6 +75,13 @@ export function Header() {
                     <span className="font-medium text-foreground">DNS Lookup</span>
                     <span className="text-[11px] text-muted-foreground">Check DNS records</span>
                   </Link>
+                  <Link
+                    href="/tools/ssl-certificate-checker"
+                    className="flex flex-col px-4 py-2.5 text-[13px] transition-colors hover:bg-muted/50"
+                  >
+                    <span className="font-medium text-foreground">SSL Certificate Checker</span>
+                    <span className="text-[11px] text-muted-foreground">Inspect TLS certificates</span>
+                  </Link>
                 </div>
               </div>
             </div>

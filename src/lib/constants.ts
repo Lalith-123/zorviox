@@ -4,7 +4,7 @@ export const SITE = {
   url: "https://zorviox.com",
   title: "Zorviox — Simple Tools for the Modern Web",
   description:
-    "Fast, practical online tools for developers, website owners, and businesses. Start with our free Meta Tag Checker, Sitemap Analyzer, Redirect Checker, JSON Repair Tool, JSON Schema Generator, and DNS Lookup Tool.",
+    "Fast, practical online tools for developers, website owners, and businesses. Start with our free Meta Tag Checker, Sitemap Analyzer, Redirect Checker, JSON Repair Tool, JSON Schema Generator, DNS Lookup Tool, and SSL Certificate Checker.",
 } as const;
 
 export interface Tool {
@@ -55,6 +55,13 @@ export const TOOLS: Tool[] = [
     name: "DNS Lookup Tool",
     description:
       "Check A, AAAA, MX, CNAME, NS, TXT, SOA, CAA, SRV, and PTR records. Reverse DNS lookup and DNS diagnostics.",
+    category: "Networking",
+  },
+  {
+    slug: "ssl-certificate-checker",
+    name: "SSL Certificate Checker",
+    description:
+      "Inspect TLS certificates, expiration, issuer, hostname coverage, certificate chain, cipher suite, and security configuration.",
     category: "Networking",
   },
 ];
