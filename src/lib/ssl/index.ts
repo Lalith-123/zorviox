@@ -1,21 +1,6 @@
 import { checkSslCertificate, checkHttpRedirect } from "./connection";
+import { checkRateLimit } from "@/lib/utils";
 import type { SslCheckResult } from "./types";
-
-const rateLimitMap = new Map<string, number[]>();
-const RATE_LIMIT_WINDOW = 60000;
-const RATE_LIMIT_MAX = 30;
-
-function checkRateLimit(ip: string): boolean {
-  const now = Date.now();
-  const timestamps = rateLimitMap.get(ip) || [];
-  const validTimestamps = timestamps.filter((t) => now - t < RATE_LIMIT_WINDOW);
-  if (validTimestamps.length >= RATE_LIMIT_MAX) {
-    return false;
-  }
-  validTimestamps.push(now);
-  rateLimitMap.set(ip, validTimestamps);
-  return true;
-}
 
 export async function performSslCheck(
   hostname: string,

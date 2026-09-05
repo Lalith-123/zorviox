@@ -1,8 +1,12 @@
 "use client";
 
-import { useState, useCallback, useRef, useEffect } from "react";
+import { useState, useCallback } from "react";
 import { analyzeJson, formatJson, minifyJson, getExampleJson } from "@/lib/json-repair/analyzer";
 import type { JsonRepairResult } from "@/lib/json-repair/types";
+import { useInputFocus } from "@/hooks/use-input-focus";
+import { useCopyToClipboard } from "@/hooks/use-copy-to-clipboard";
+import { useDownload } from "@/hooks/use-download";
+import { InfoNotice } from "@/components/shared/info-notice";
 
 function StatusBadge({ valid }: { valid: boolean }) {
   return (
@@ -76,26 +80,12 @@ function RepairList({ repairs }: { repairs: { description: string; confidence: s
 export function JsonRepairTool() {
   const [input, setInput] = useState("");
   const [result, setResult] = useState<JsonRepairResult | null>(null);
-  const [copied, setCopied] = useState(false);
   const [showDiff, setShowDiff] = useState(false);
   const [formatError, setFormatError] = useState<string | null>(null);
   const [isDragging, setIsDragging] = useState(false);
-  const textareaRef = useRef<HTMLTextAreaElement>(null);
-
-  useEffect(() => {
-    textareaRef.current?.focus();
-  }, []);
-
-  useEffect(() => {
-    function handleKeyDown(e: KeyboardEvent) {
-      if (e.key === "/" && !(e.target instanceof HTMLTextAreaElement || e.target instanceof HTMLInputElement)) {
-        e.preventDefault();
-        textareaRef.current?.focus();
-      }
-    }
-    document.addEventListener("keydown", handleKeyDown);
-    return () => document.removeEventListener("keydown", handleKeyDown);
-  }, []);
+  const textareaRef = useInputFocus<HTMLTextAreaElement>();
+  const { copied, copy } = useCopyToClipboard();
+  const { download } = useDownload();
 
   const handleDrop = useCallback((e: React.DragEvent) => {
     e.preventDefault();
@@ -185,22 +175,14 @@ export function JsonRepairTool() {
   const handleCopy = useCallback(async () => {
     const text = result?.isValid ? result.output : input;
     if (!text) return;
-    await navigator.clipboard.writeText(text);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  }, [result, input]);
+    copy(text);
+  }, [result, input, copy]);
 
   const handleDownload = useCallback(() => {
     const text = result?.isValid ? result.output : input;
     if (!text) return;
-    const blob = new Blob([text], { type: "application/json" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "repaired.json";
-    a.click();
-    URL.revokeObjectURL(url);
-  }, [result, input]);
+    download(text, "repaired.json");
+  }, [result, input, download]);
 
   const handleClear = useCallback(() => {
     setInput("");
@@ -253,10 +235,9 @@ export function JsonRepairTool() {
 
   return (
     <div className="space-y-4">
-      {/* Privacy notice */}
-      <div className="rounded-lg border border-accent/20 bg-accent/5 px-4 py-2 text-[12px] text-muted-foreground">
+      <InfoNotice>
         Your JSON is processed locally in your browser. No data is sent to any server.
-      </div>
+      </InfoNotice>
 
       {/* Editor */}
       <div>

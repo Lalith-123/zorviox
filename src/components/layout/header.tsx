@@ -3,6 +3,17 @@
 import Link from "next/link";
 import { Container } from "@/components/layout/container";
 import { ThemeToggle } from "@/components/layout/theme-toggle";
+import { TOOLS } from "@/lib/constants";
+
+const TOOL_SUBTITLES: Record<string, string> = {
+  "meta-tag-checker": "Analyze SEO tags",
+  "sitemap-analyzer": "Audit XML sitemaps",
+  "redirect-checker": "Trace redirect paths",
+  "json-repair": "Fix malformed JSON",
+  "json-schema-generator": "Generate JSON Schema",
+  "dns-lookup": "Check DNS records",
+  "ssl-certificate-checker": "Inspect TLS certificates",
+};
 
 export function Header() {
   return (
@@ -33,55 +44,18 @@ export function Header() {
 
               <div className="invisible absolute right-0 top-full pt-2 opacity-0 transition-all duration-200 group-hover:visible group-hover:opacity-100">
                 <div className="w-56 overflow-hidden rounded-xl border border-border/80 bg-card py-1.5 shadow-lg">
-                  <Link
-                    href="/tools/meta-tag-checker"
-                    className="flex flex-col px-4 py-2.5 text-[13px] transition-colors hover:bg-muted/50"
-                  >
-                    <span className="font-medium text-foreground">Meta Tag Checker</span>
-                    <span className="text-[11px] text-muted-foreground">Analyze SEO tags</span>
-                  </Link>
-                  <Link
-                    href="/tools/sitemap-analyzer"
-                    className="flex flex-col px-4 py-2.5 text-[13px] transition-colors hover:bg-muted/50"
-                  >
-                    <span className="font-medium text-foreground">Sitemap Analyzer</span>
-                    <span className="text-[11px] text-muted-foreground">Audit XML sitemaps</span>
-                  </Link>
-                  <Link
-                    href="/tools/redirect-checker"
-                    className="flex flex-col px-4 py-2.5 text-[13px] transition-colors hover:bg-muted/50"
-                  >
-                    <span className="font-medium text-foreground">Redirect Checker</span>
-                    <span className="text-[11px] text-muted-foreground">Trace redirect paths</span>
-                  </Link>
-                  <Link
-                    href="/tools/json-repair"
-                    className="flex flex-col px-4 py-2.5 text-[13px] transition-colors hover:bg-muted/50"
-                  >
-                    <span className="font-medium text-foreground">JSON Repair</span>
-                    <span className="text-[11px] text-muted-foreground">Fix malformed JSON</span>
-                  </Link>
-                  <Link
-                    href="/tools/json-schema-generator"
-                    className="flex flex-col px-4 py-2.5 text-[13px] transition-colors hover:bg-muted/50"
-                  >
-                    <span className="font-medium text-foreground">JSON Schema Generator</span>
-                    <span className="text-[11px] text-muted-foreground">Generate JSON Schema</span>
-                  </Link>
-                  <Link
-                    href="/tools/dns-lookup"
-                    className="flex flex-col px-4 py-2.5 text-[13px] transition-colors hover:bg-muted/50"
-                  >
-                    <span className="font-medium text-foreground">DNS Lookup</span>
-                    <span className="text-[11px] text-muted-foreground">Check DNS records</span>
-                  </Link>
-                  <Link
-                    href="/tools/ssl-certificate-checker"
-                    className="flex flex-col px-4 py-2.5 text-[13px] transition-colors hover:bg-muted/50"
-                  >
-                    <span className="font-medium text-foreground">SSL Certificate Checker</span>
-                    <span className="text-[11px] text-muted-foreground">Inspect TLS certificates</span>
-                  </Link>
+                  {TOOLS.map((tool) => (
+                    <Link
+                      key={tool.slug}
+                      href={`/tools/${tool.slug}`}
+                      className="flex flex-col px-4 py-2.5 text-[13px] transition-colors hover:bg-muted/50"
+                    >
+                      <span className="font-medium text-foreground">{tool.name}</span>
+                      <span className="text-[11px] text-muted-foreground">
+                        {TOOL_SUBTITLES[tool.slug] || tool.description}
+                      </span>
+                    </Link>
+                  ))}
                 </div>
               </div>
             </div>

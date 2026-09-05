@@ -1,6 +1,10 @@
 "use client";
 
-import { useState, useCallback, useRef, useEffect } from "react";
+import { useState, useCallback } from "react";
+import { useInputFocus } from "@/hooks/use-input-focus";
+import { useCopyToClipboard } from "@/hooks/use-copy-to-clipboard";
+import { InfoNotice } from "@/components/shared/info-notice";
+import { ErrorDisplay } from "@/components/shared/error-display";
 
 interface SslCheckResult {
   hostname: string;
@@ -69,6 +73,13 @@ interface SslCheckResult {
     redirectUrl: string | null;
     statusCode: number | null;
   } | null;
+  hsts: {
+    present: boolean;
+    maxAge: number | null;
+    includeSubDomains: boolean;
+    preload: boolean;
+    header: string | null;
+  } | null;
   error: {
     code: string;
     message: string;
@@ -84,28 +95,8 @@ export function SslCertificateCheckerTool() {
   const [expandedSections, setExpandedSections] = useState<
     Record<string, boolean>
   >({});
-  const inputRef = useRef<HTMLInputElement>(null);
-
-  useEffect(() => {
-    inputRef.current?.focus();
-  }, []);
-
-  useEffect(() => {
-    function handleKeyDown(e: KeyboardEvent) {
-      if (
-        e.key === "/" &&
-        !(
-          e.target instanceof HTMLTextAreaElement ||
-          e.target instanceof HTMLInputElement
-        )
-      ) {
-        e.preventDefault();
-        inputRef.current?.focus();
-      }
-    }
-    document.addEventListener("keydown", handleKeyDown);
-    return () => document.removeEventListener("keydown", handleKeyDown);
-  }, []);
+  const inputRef = useInputFocus<HTMLInputElement>();
+  const { copy } = useCopyToClipboard();
 
   const toggleSection = useCallback((key: string) => {
     setExpandedSections((prev) => ({ ...prev, [key]: !prev[key] }));
@@ -172,8 +163,8 @@ export function SslCertificateCheckerTool() {
   const handleCopy = useCallback(() => {
     if (!result) return;
     const text = formatResultText(result);
-    navigator.clipboard.writeText(text);
-  }, [result]);
+    copy(text);
+  }, [result, copy]);
 
   const certificate = result?.certificate;
   const tls = result?.tls;
@@ -207,10 +198,10 @@ export function SslCertificateCheckerTool() {
 
   return (
     <div className="space-y-4">
-      <div className="rounded-lg border border-accent/20 bg-accent/5 px-4 py-2 text-[12px] text-muted-foreground">
+      <InfoNotice>
         SSL/TLS connections are established server-side. Results reflect the
         certificate presented by the target server.
-      </div>
+      </InfoNotice>
 
       {/* Input */}
       <div>
@@ -257,11 +248,7 @@ export function SslCertificateCheckerTool() {
       )}
 
       {/* Error */}
-      {error && (
-        <div className="rounded-lg border border-destructive/20 bg-destructive/5 px-4 py-3 text-[13px] text-destructive">
-          {error}
-        </div>
-      )}
+      {error && <ErrorDisplay error={error} />}
 
       {/* Results */}
       {result && (

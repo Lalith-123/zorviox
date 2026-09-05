@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { analyzeSitemap } from "@/lib/sitemap/analyzer";
+import { ensureHttps } from "@/lib/utils";
 
 export async function POST(request: NextRequest) {
   try {
@@ -14,7 +15,7 @@ export async function POST(request: NextRequest) {
     }
 
     url = url.trim();
-    if (!/^https?:\/\//i.test(url)) url = "https://" + url;
+    url = ensureHttps(url);
 
     const result = await analyzeSitemap(url);
 

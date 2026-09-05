@@ -1,6 +1,11 @@
 "use client";
 
-import { useState, useTransition, useRef, useEffect } from "react";
+import { useState, useTransition } from "react";
+
+import { useInputFocus } from "@/hooks/use-input-focus";
+import { InfoNotice } from "@/components/shared/info-notice";
+import { ErrorDisplay } from "@/components/shared/error-display";
+import { CollapsibleSection } from "@/components/shared/collapsible-section";
 
 interface RedirectHop {
   step: number;
@@ -153,39 +158,6 @@ function CopyButton({ text, label }: { text: string; label: string }) {
   );
 }
 
-function CollapsibleSection({
-  title,
-  children,
-  defaultOpen = false,
-}: {
-  title: string;
-  children: React.ReactNode;
-  defaultOpen?: boolean;
-}) {
-  return (
-    <details
-      open={defaultOpen}
-      className="group rounded-xl border border-border/60 bg-card"
-    >
-      <summary className="flex cursor-pointer list-none items-center justify-between px-5 py-3.5 text-[14px] font-medium text-foreground transition-colors hover:bg-muted/50 [&::-webkit-details-marker]:hidden">
-        {title}
-        <svg
-          className="h-4 w-4 shrink-0 text-muted-foreground transition-transform duration-200 group-open:rotate-180"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-          strokeWidth={2}
-        >
-          <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-        </svg>
-      </summary>
-      <div className="space-y-3 border-t border-border/40 px-5 pb-5 pt-4 text-[14px] leading-relaxed text-muted-foreground">
-        {children}
-      </div>
-    </details>
-  );
-}
-
 function IssueList({ issues }: { issues: { severity: string; message: string; detail?: string }[] }) {
   if (issues.length === 0) return null;
 
@@ -239,22 +211,7 @@ export function RedirectCheckerTool() {
   const [result, setResult] = useState<AnalysisResult | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
-  const inputRef = useRef<HTMLInputElement>(null);
-
-  useEffect(() => {
-    inputRef.current?.focus();
-  }, []);
-
-  useEffect(() => {
-    function handleKeyDown(e: KeyboardEvent) {
-      if (e.key === "/" && !(e.target instanceof HTMLTextAreaElement || e.target instanceof HTMLInputElement)) {
-        e.preventDefault();
-        inputRef.current?.focus();
-      }
-    }
-    document.addEventListener("keydown", handleKeyDown);
-    return () => document.removeEventListener("keydown", handleKeyDown);
-  }, []);
+  const inputRef = useInputFocus<HTMLInputElement>();
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -332,11 +289,7 @@ export function RedirectCheckerTool() {
         </div>
       </form>
 
-      {error && (
-        <div className="mb-6 rounded-lg border border-destructive/20 bg-destructive/5 px-4 py-3 text-[13px] text-destructive">
-          {error}
-        </div>
-      )}
+      {error && <ErrorDisplay error={error} />}
 
       {result && (
         <div className="space-y-8 animate-fade-in">
@@ -379,9 +332,9 @@ export function RedirectCheckerTool() {
             </div>
 
             {result.redirectType === "none" && (
-              <div className="mt-3 rounded-lg border border-accent/20 bg-accent/5 px-4 py-3 text-[13px] text-muted-foreground">
+              <InfoNotice>
                 No HTTP redirect detected — the URL returns a direct response.
-              </div>
+              </InfoNotice>
             )}
           </div>
 
@@ -454,20 +407,20 @@ export function RedirectCheckerTool() {
               </h3>
               <div className="space-y-2">
                 {result.metaRefresh?.detected && (
-                  <div className="rounded-lg border border-accent/20 bg-accent/5 px-4 py-3 text-[13px]">
+                  <InfoNotice>
                     <span className="font-medium text-foreground">HTML meta refresh</span>
                     <div className="mt-1 text-muted-foreground">
                       URL: {result.metaRefresh.url} {result.metaRefresh.delay != null && `(${result.metaRefresh.delay}s delay)`}
                     </div>
-                  </div>
+                  </InfoNotice>
                 )}
                 {result.jsRedirect?.detected && (
-                  <div className="rounded-lg border border-accent/20 bg-accent/5 px-4 py-3 text-[13px]">
+                  <InfoNotice>
                     <span className="font-medium text-foreground">Potential JavaScript redirect</span>
                     <div className="mt-1 text-muted-foreground">
                       Patterns found: {result.jsRedirect.patterns.join(", ")}
                     </div>
-                  </div>
+                  </InfoNotice>
                 )}
               </div>
             </section>

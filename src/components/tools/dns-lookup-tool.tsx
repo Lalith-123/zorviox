@@ -1,8 +1,12 @@
 "use client";
 
-import { useState, useCallback, useRef, useEffect } from "react";
+import { useState, useCallback } from "react";
 import type { DnsRecordType, DnsLookupResult } from "@/lib/dns/types";
 import { SUPPORTED_RECORD_TYPES } from "@/lib/dns/types";
+import { useInputFocus } from "@/hooks/use-input-focus";
+import { useCopyToClipboard } from "@/hooks/use-copy-to-clipboard";
+import { InfoNotice } from "@/components/shared/info-notice";
+import { ErrorDisplay } from "@/components/shared/error-display";
 
 const RECORD_TYPE_OPTIONS: { value: DnsRecordType | "ALL"; label: string }[] = [
   { value: "ALL", label: "All common records" },
@@ -16,26 +20,8 @@ export function DnsLookupTool() {
   const [error, setError] = useState<string | null>(null);
   const [result, setResult] = useState<DnsLookupResult | null>(null);
   const [results, setResults] = useState<DnsLookupResult[] | null>(null);
-  const [copied, setCopied] = useState(false);
-  const inputRef = useRef<HTMLInputElement>(null);
-
-  useEffect(() => {
-    inputRef.current?.focus();
-  }, []);
-
-  useEffect(() => {
-    function handleKeyDown(e: KeyboardEvent) {
-      if (
-        e.key === "/" &&
-        !(e.target instanceof HTMLTextAreaElement || e.target instanceof HTMLInputElement)
-      ) {
-        e.preventDefault();
-        inputRef.current?.focus();
-      }
-    }
-    document.addEventListener("keydown", handleKeyDown);
-    return () => document.removeEventListener("keydown", handleKeyDown);
-  }, []);
+  const inputRef = useInputFocus<HTMLInputElement>();
+  const { copied, copy } = useCopyToClipboard();
 
   const handleLookup = useCallback(async () => {
     const trimmed = hostname.trim();
@@ -90,16 +76,14 @@ export function DnsLookupTool() {
       : results
         ? results.map(formatResultText).join("\n\n")
         : "";
-    navigator.clipboard.writeText(text);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  }, [result, results]);
+    copy(text);
+  }, [result, results, copy]);
 
   return (
     <div className="space-y-4">
-      <div className="rounded-lg border border-accent/20 bg-accent/5 px-4 py-2 text-[12px] text-muted-foreground">
+      <InfoNotice>
         DNS queries are performed server-side. Results reflect the resolver used by Zorviox.
-      </div>
+      </InfoNotice>
 
       {/* Input */}
       <div>
@@ -145,12 +129,7 @@ export function DnsLookupTool() {
         </div>
       </div>
 
-      {/* Error */}
-      {error && (
-        <div className="rounded-lg border border-destructive/20 bg-destructive/5 px-4 py-3 text-[13px] text-destructive">
-          {error}
-        </div>
-      )}
+      {error && <ErrorDisplay error={error} />}
 
       {/* Single result */}
       {result && (

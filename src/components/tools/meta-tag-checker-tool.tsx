@@ -1,6 +1,10 @@
 "use client";
 
-import { useState, useTransition, useRef, useEffect } from "react";
+import { useState, useTransition } from "react";
+
+import { useInputFocus } from "@/hooks/use-input-focus";
+import { InfoNotice } from "@/components/shared/info-notice";
+import { ErrorDisplay } from "@/components/shared/error-display";
 
 interface Score {
   total: number;
@@ -130,22 +134,7 @@ export function MetaTagCheckerTool() {
   const [result, setResult] = useState<AnalysisResult | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
-  const inputRef = useRef<HTMLInputElement>(null);
-
-  useEffect(() => {
-    inputRef.current?.focus();
-  }, []);
-
-  useEffect(() => {
-    function handleKeyDown(e: KeyboardEvent) {
-      if (e.key === "/" && !(e.target instanceof HTMLTextAreaElement || e.target instanceof HTMLInputElement)) {
-        e.preventDefault();
-        inputRef.current?.focus();
-      }
-    }
-    document.addEventListener("keydown", handleKeyDown);
-    return () => document.removeEventListener("keydown", handleKeyDown);
-  }, []);
+  const inputRef = useInputFocus<HTMLInputElement>();
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -211,17 +200,13 @@ export function MetaTagCheckerTool() {
         </div>
       </form>
 
-      {error && (
-        <div className="mb-6 rounded-lg border border-destructive/20 bg-destructive/5 px-4 py-3 text-[13px] text-destructive">
-          {error}
-        </div>
-      )}
+      {error && <ErrorDisplay error={error} />}
 
       {result && (
         <div className="space-y-8 animate-fade-in">
           {/* Redirect info */}
           {result.redirectCount > 0 && (
-            <div className="rounded-lg border border-accent/20 bg-accent/5 px-4 py-3 text-[12px] text-muted-foreground">
+            <InfoNotice>
               <span className="font-medium text-foreground">
                 {result.redirectCount} redirect{result.redirectCount > 1 ? "s" : ""}
               </span>{" "}
@@ -229,7 +214,7 @@ export function MetaTagCheckerTool() {
               <span className="break-all font-medium text-foreground">
                 {result.finalUrl}
               </span>
-            </div>
+            </InfoNotice>
           )}
 
           <ScoreDisplay score={result.score} />

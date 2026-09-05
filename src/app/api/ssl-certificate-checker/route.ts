@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { performSslCheck } from "@/lib/ssl";
+import { extractClientIp } from "@/lib/utils";
 
 const VALID_PORT_RANGE = { min: 1, max: 65535 };
 
@@ -36,10 +37,7 @@ function isValidHostname(input: string): { valid: boolean; error?: string } {
 }
 
 export async function POST(request: NextRequest) {
-  const ip =
-    request.headers.get("x-forwarded-for")?.split(",")[0] ||
-    request.headers.get("x-real-ip") ||
-    "unknown";
+  const ip = extractClientIp(request);
 
   try {
     const body = await request.json();

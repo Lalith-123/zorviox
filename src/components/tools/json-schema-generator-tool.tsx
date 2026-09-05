@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useRef, useEffect } from "react";
+import { useState, useCallback } from "react";
 import {
   parseJsonInput,
   generateSchema,
@@ -10,6 +10,11 @@ import {
 } from "@/lib/json-schema/analyzer";
 import type { SchemaGeneratorOptions, SchemaGenerationResult } from "@/lib/json-schema/types";
 import { DEFAULT_OPTIONS } from "@/lib/json-schema/types";
+import { useInputFocus } from "@/hooks/use-input-focus";
+import { useCopyToClipboard } from "@/hooks/use-copy-to-clipboard";
+import { useDownload } from "@/hooks/use-download";
+import { InfoNotice } from "@/components/shared/info-notice";
+import { ErrorDisplay } from "@/components/shared/error-display";
 
 const SINGLE_EXAMPLE = JSON.stringify(
   {
@@ -34,32 +39,15 @@ export function JsonSchemaGeneratorTool() {
   const [input, setInput] = useState("");
   const [result, setResult] = useState<SchemaGenerationResult | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [copied, setCopied] = useState(false);
   const [multiSample, setMultiSample] = useState(false);
   const [samples, setSamples] = useState<string[]>(["", ""]);
   const [showOptions, setShowOptions] = useState(false);
   const [options, setOptions] = useState<SchemaGeneratorOptions>(DEFAULT_OPTIONS);
   const [isDragging, setIsDragging] = useState(false);
   const [displayMode, setDisplayMode] = useState<"formatted" | "minified">("formatted");
-  const inputRef = useRef<HTMLTextAreaElement>(null);
-
-  useEffect(() => {
-    inputRef.current?.focus();
-  }, []);
-
-  useEffect(() => {
-    function handleKeyDown(e: KeyboardEvent) {
-      if (
-        e.key === "/" &&
-        !(e.target instanceof HTMLTextAreaElement || e.target instanceof HTMLInputElement)
-      ) {
-        e.preventDefault();
-        inputRef.current?.focus();
-      }
-    }
-    document.addEventListener("keydown", handleKeyDown);
-    return () => document.removeEventListener("keydown", handleKeyDown);
-  }, []);
+  const inputRef = useInputFocus<HTMLTextAreaElement>();
+  const { copied, copy } = useCopyToClipboard();
+  const { download } = useDownload();
 
   const handleGenerate = useCallback(() => {
     setError(null);
@@ -114,21 +102,13 @@ export function JsonSchemaGeneratorTool() {
 
   const handleCopy = useCallback(() => {
     if (!result) return;
-    navigator.clipboard.writeText(getSchemaString());
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  }, [result, getSchemaString]);
+    copy(getSchemaString());
+  }, [result, getSchemaString, copy]);
 
   const handleDownload = useCallback(() => {
     if (!result) return;
-    const blob = new Blob([getSchemaString()], { type: "application/json" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "schema.json";
-    a.click();
-    URL.revokeObjectURL(url);
-  }, [result, getSchemaString]);
+    download(getSchemaString(), "schema.json");
+  }, [result, getSchemaString, download]);
 
   const handleClear = useCallback(() => {
     setInput("");
@@ -217,10 +197,9 @@ export function JsonSchemaGeneratorTool() {
 
   return (
     <div className="space-y-4">
-      {/* Privacy notice */}
-      <div className="rounded-lg border border-accent/20 bg-accent/5 px-4 py-2 text-[12px] text-muted-foreground">
+      <InfoNotice>
         Your JSON is processed locally in your browser. No data is sent to any server.
-      </div>
+      </InfoNotice>
 
       {/* Input mode toggle */}
       <div className="flex items-center gap-2">
@@ -458,19 +437,18 @@ export function JsonSchemaGeneratorTool() {
         </div>
       </div>
 
-      {/* Error */}
       {error && (
-        <div className="rounded-lg border border-destructive/20 bg-destructive/5 px-4 py-3 text-[13px] text-destructive">
-          {error}
+        <>
+          <ErrorDisplay error={error} />
           {error.includes("Invalid JSON") && (
             <a
               href="/tools/json-repair"
-              className="ml-2 underline underline-offset-2 hover:text-foreground"
+              className="ml-2 text-[13px] text-muted-foreground underline underline-offset-2 hover:text-foreground"
             >
               Open in JSON Repair
             </a>
           )}
-        </div>
+        </>
       )}
 
       {/* Result */}

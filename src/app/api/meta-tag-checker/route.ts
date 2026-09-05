@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { ensureHttps } from "@/lib/utils";
 
 const TIMEOUT_MS = 10000;
 const MAX_BYTES = 5 * 1024 * 1024;
@@ -130,7 +131,7 @@ export async function POST(request: NextRequest) {
     }
 
     url = url.trim();
-    if (!/^https?:\/\//i.test(url)) url = "https://" + url;
+    url = ensureHttps(url);
 
     let parsed: URL;
     try {
