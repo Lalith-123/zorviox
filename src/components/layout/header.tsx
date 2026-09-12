@@ -13,6 +13,8 @@ const TOOL_SUBTITLES: Record<string, string> = {
   "json-schema-generator": "Generate JSON Schema",
   "dns-lookup": "Check DNS records",
   "ssl-certificate-checker": "Inspect TLS certificates",
+  "broken-link-scanner": "Find broken links",
+  "http-header-analyzer": "Inspect response headers",
 };
 
 export function Header() {

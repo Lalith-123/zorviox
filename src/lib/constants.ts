@@ -4,7 +4,7 @@ export const SITE = {
   url: "https://zorviox.com",
   title: "Zorviox — Simple Tools for the Modern Web",
     description:
-      "Fast, practical online tools for developers, website owners, and businesses. Start with our free Meta Tag Checker, Sitemap Analyzer, Redirect Checker, JSON Repair Tool, JSON Schema Generator, DNS Lookup Tool, SSL Certificate Checker, and Broken Link Checker.",
+      "Fast, practical online tools for developers, website owners, and businesses. Start with our free Meta Tag Checker, Sitemap Analyzer, Redirect Checker, JSON Repair Tool, JSON Schema Generator, DNS Lookup Tool, SSL Certificate Checker, Broken Link Checker, and HTTP Header Analyzer.",
 } as const;
 
 export interface Tool {
@@ -68,7 +68,14 @@ export const TOOLS: Tool[] = [
     slug: "broken-link-scanner",
     name: "Broken Link Checker",
     description:
-      "Crawl your website to find broken links, 404 errors, redirect chains, server errors, and soft 404s.",
+      "Find broken links, 404 errors, and redirect chains across your website.",
     category: "SEO & Website",
+  },
+  {
+    slug: "http-header-analyzer",
+    name: "HTTP Header Analyzer",
+    description:
+      "Inspect response headers, analyze security, caching, CORS, and SEO directives.",
+    category: "Networking",
   },
 ];
